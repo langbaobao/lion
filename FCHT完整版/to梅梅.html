@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="http://libs.baidu.com/jquery/1.8.3/jquery.min.js"></script>
+		<style type="text/css">
+			* {
+				margin: 0;
+				padding: 0;
+			}
+			
+			p {
+				width: 1100px;
+				margin: 0 auto;
+				line-height: 120px;
+				font-size: 32px;
+			}
+			
+			span {
+				display: inline-block;
+				width: 6em;
+				text-align: right;
+			}
+			
+			a {
+				display: inline-block;
+				vertical-align: middle;
+				height: 80px;
+				line-height: 80px;
+				width: 150px;
+				/*margin: 0 10px;*/
+				text-align: center;
+				text-decoration: none;
+				border: 2px solid #ccc;
+				border-radius: 10px;
+				color: #333;
+			}
+			
+			a.now {
+				background: skyblue;
+				color: #fff;
+			}
+			
+			input {
+				width: 300px;
+				height: 80px;
+				margin: 0 10px;
+				vertical-align: middle;
+				border-radius: 10px;
+				border: 2px solid #ccc;
+				padding: 0 20px;
+				font-size: 32px;
+			}
+			
+			button {
+				width: 200px;
+				height: 80px;
+				margin: 0 10px;
+				background: skyblue;
+				border: none;
+				border-radius: 10px;
+				color: #fff;
+				line-height: 80px;
+				font-size: 32px;
+			}
+			
+			.layout {
+				width: 100vw;
+				height: 100vh;
+				position: fixed;
+				top: 0;
+				left: 0;
+				background: rgba(0, 0, 0, 0.6);
+				display: none;
+			}
+			
+			.layout .msg {
+				width: 500px;
+				height: 200px;
+				padding: 20px;
+				background: white;
+				top: 0;
+				left: 0;
+				bottom: 0;
+				right: 0;
+				margin: auto;
+				position: absolute;
+				text-align: center;
+				border-radius: 20px;
+			}
+			
+			.layout .msg h1 {
+				font-size: 32px;
+				line-height: 80px;
+				padding-top: 40px;
+				color: red;
+			}
+			
+			.layout .msg p {
+				width: 100%;
+				font-size: 18px;
+				line-height: 40px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<p><span>面试者姓名：</span><input type="text" id="name" placeholder="请输入面试者姓名" /></p>
+		<p class="zhuli"><span>人事助理：</span>
+			<a href="#" py="chenru">陈茹</a>
+			<a href="#" py="chenyang">陈扬</a>
+			<a href="#" py="lijunjun">李君君</a>
+			<a href="#" py="jinweiqian">靳魏倩</a>
+		</p>
+		<p class="zixun"><span>咨询师：</span>
+			<a href="#" py="zhuying">朱莹</a>
+			<a href="#" py="wangjuan">王娟</a>
+			<a href="#" py="liangjinyan">梁金艳</a>
+			<a href="#" py="baibeibei">白贝贝</a>
+			<a href="#" py="baohongmin">鲍宏敏</a>
+		</p>
+		<p><span></span><button>生成</button>&nbsp;&nbsp;</p>
+		<p class="copy"></p>
+		<div class="layout">
+			<div class="msg">
+				<h1>请输入面试者姓名</h1>
+				<p>2秒后关闭 : )</p>
+			</div>
+		</div>
+		<script type="text/javascript">
+			$("a").click(function() {
+				$(this).addClass("now").siblings().removeClass("now")
+				return false;
+			})
+
+			$("button").click(function() {
+
+				if($("#name").val() == "") {
+					$("h1").text("请输入面试者姓名")
+					$(".layout").fadeIn()
+					setTimeout(function() {
+						$(".layout").fadeOut()
+					}, 1500)
+					return false;
+				}
+				if($(".zhuli a.now").length == 0) {
+					$("h1").text("请选择人事助理")
+					$(".layout").fadeIn()
+					setTimeout(function() {
+						$(".layout").fadeOut()
+					}, 1500)
+					return false;
+				}
+				if($(".zixun a.now").length == 0) {
+					$("h1").text("请选择咨询师")
+					$(".layout").fadeIn()
+					setTimeout(function() {
+						$(".layout").fadeOut()
+					}, 1500)
+					return false;
+				}
+
+				var name = $("#name").val()
+				var zhuli = $(".zhuli a.now").text()
+				var zixun = $(".zixun a.now").text()
+				var zhuliname = $(".zhuli a.now").attr("py")
+				var zixunname = $(".zixun a.now").attr("py")
+				var zhulinum = Number(getCookie(zhuliname))+1
+				var zixunnum = Number(getCookie(zixunname))+1
+				console.log(zhulinum)
+				console.log(zixunnum)
+				console.log(zhuliname)
+				console.log(zixunname)
+				var date1 = new Date()
+				month = date1.getMonth() + 1
+				day = date1.getDate()
+				var today = month + "月" + day + "日"
+				console.log(today)
+				var todaynum = Number(getCookie("todaynum"))+1
+				
+				setCookie(zhuliname,zhulinum)
+				setCookie(zixunname,zixunnum)
+				setCookie("todaynum",todaynum)
+				
+				$(".copy").text(name + "，" + zhuli + "第" + zhulinum + "个，" + zixun + "咨询师第" + zixunnum + "个，" + today + "第" + todaynum + "个，代招")
+				$(".copy").show()
+				
+				$("a").removeClass("now")
+				$("#name").val("")
+
+			})
+
+			function setCookie(name, value) {
+				var Days = 1; //保存的天数，有效期
+				var exp = new Date("2017-"+month+"-"+day+" 08:00:00");
+				exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
+				document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString();
+			}
+
+			function getCookie(name) {
+				var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+				if(arr = document.cookie.match(reg))
+					return unescape(arr[2]);
+				else
+					return null;
+			}
+		</script>
+	</body>
+
+</html>
